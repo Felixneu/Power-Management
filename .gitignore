@@ -39,13 +39,13 @@ Module.symvers
 #
 # Top-level generic files
 #
-/tags
-/TAGS
-/linux
-/vmlinux
-/vmlinuz
-/System.map
-/Module.markers
+/kernel-src/tags
+/kernel-src/TAGS
+/kernel-src/linux
+/kernel-src/vmlinux
+/kernel-src/vmlinuz
+/kernel-src/System.map
+/kernel-src/Module.markers
 
 #
 # Debian directory (make deb-pkg)
@@ -61,9 +61,9 @@ Module.symvers
 #
 # Generated include files
 #
-include/config
-include/generated
-arch/*/include/generated
+/kernel-src/include/config
+/kernel-src/include/generated
+/kernel-src/arch/*/include/generated
 
 # stgit generated dirs
 patches-*
