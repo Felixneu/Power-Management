@@ -1,0 +1,23 @@
+Blöcke vs. ganze Dateien auf SSD cachen:
+Es werden immer ganze Dateien gebraucht -> warum kann es Sinn machen nur einzelne Blöcke zu cachen?
+Häufig verwendeten Dateien entspricht häufig verwendeten Blöcken, Vermutung: kein Unterschied
+Bei kleinem Cache vielleicht besser Blöcke zu cachen, wir haben großen Cache
+
+
+
+Was möchte man überhaupt cachen?
+Nur Dateiweise? Bei vielen kleinen Dateien wirkungslos
+Einen ganzen Ordner (Prefetching ...)?
+
+Häufig verwendete Dateien lernen?
+Idee:
+Immer die 5% am häufigsten verwendeten Dateien/Blöcke cachen + Rest von großen Dateien, die nicht mit Fullspeed konsumiert werden, z.B Streaming (Prefetching)
+
+Beim Schreiben:
+Ist die Datei immer im Cache? Oder gibts Situationen in denen direkt auf Platte geschrieben wird?
+Wichtig Schreibzugriffe zu aggregieren!
+
+
+
+Auf der SSD speichern:
+Zu jedem Block/Datei eine Dateneinheit mit info: zuWelcherDatei, Blocknummer, wieHäufigVerwendet, DatenSelber (optional, wenn gecached)
