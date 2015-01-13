@@ -31,9 +31,9 @@ Spätestens beim umount müssen alle geänderten Dateien auf HDD geschrieben wer
 Ändern sich die Blocknummern im laufenden Betrieb? (z.B. bei Erweiterung/Umordnung eines Eintrags), spätestens wohl bei filesystem-check
 
 Was passiert beim Verschieben?
+
 Was passiert beim löschen?
-
-
+SR: von SSD löschen, lösch-Kommando in queue für Festplatte hinzufügen
 
 
 Auf der SSD speichern:
