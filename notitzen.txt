@@ -47,3 +47,22 @@ Problem: bei vielen Dateien wird SSD durch erste Blöcke voll, dann können kein
 
 Fehlersicherheit:
 Idee: Auf Festplatte und SSD einen Zeitstempel speichern, falls dieser Unterschiedlich ist, wird SSD geleert
+
+
+
+
+
+SR: komplette Verzeichnisstruktur auf SSD speichern halte ich für zu umfangreich. Wenn auf beiden (SSD und HDD) FAT32 ist gelten Änderungen auch für beide -> blöd
+Mein Vorschlag: erster Zugriff ganz normal auf HDD, da einklinken, in interner Struktur schauen, ob Datei auf ssd ...
+Ablage struktur auf SSD: selber gemacht: array mit nummer/dateinamen und zugehörigen daten
+
+Oder doch Clusterweise, jeder Cluster hat sowieso eindeutige Addresse, diese Adressen stehen in FAT.
+Beim Laden der Chain (hole Cluster x, hole cluster y), Cluster von SSD laden
+
+Also im Prinzip zwei mal dasselbe:
+1 Dateien auf SSD verwalten, Einklinkpunkt: Dateizugriff
+2 Cluster auf SSD verwalten, Einklinkpunkt: Clusterzugriff
+
+Unterschied beim Schreiben:
+Bei Clustern kann nicht auf SSD geschrieben werden, weil nicht bekannt welche Cluster zu welcher Datei gehören
+Um das zu machen müsste man wieder mehr Infos auf der SSD speichern  
