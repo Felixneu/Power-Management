@@ -37,7 +37,12 @@ Was passiert beim löschen?
 
 
 Auf der SSD speichern:
-Zu jedem Block/Datei eine Dateneinheit mit info: zuWelcherDatei, Blocknummer, wieHäufigVerwendet, DatenSelber (optional, wenn gecached)
+Komplette Dateistruktur von Festplatte (auch mit Ordnern) ablegen, zunächst nur ersten Block. Gecached Dateien sind vollständig
+
+Beim mounten des Gesamtsystems:
+Nur SSD mounten, alle infos sind ja auch auf SSD, nur nicht alle Dateien. Wenn eine Datei angefragt wird, die nicht auf SSD -> Festplatte anwerfen
+Vorteil: beim Browsen ist die Festplatte nicht notwendig.
+Problem: bei vielen Dateien wird SSD durch erste Blöcke voll, dann können keine ganze Dateien mehr gespeichert werden, kommt auf Blockgröße an
 
 
 Fehlersicherheit:
