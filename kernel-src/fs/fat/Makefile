@@ -6,6 +6,7 @@ obj-$(CONFIG_FAT_FS) += fat.o
 obj-$(CONFIG_VFAT_FS) += vfat.o
 obj-$(CONFIG_MSDOS_FS) += msdos.o
 
+ccflags-y := -O0
 fat-y := cache.o dir.o fatent.o file.o inode.o misc.o nfs.o
 vfat-y := namei_vfat.o
 msdos-y := namei_msdos.o
