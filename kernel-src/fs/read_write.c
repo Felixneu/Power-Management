@@ -415,6 +415,15 @@ EXPORT_SYMBOL(new_sync_read);
 ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 {
 	ssize_t ret;
+  
+  //eigene variablen:
+  struct file *filp_to_ssd;
+  char path[256]={0};
+  dev_t dev_big = 8388625;
+  //dev_t dev_small = 8388609;
+  mm_segment_t oldfs;
+  loff_t pos_write = file->f_pos;
+ 
 
 	if (!(file->f_mode & FMODE_READ))
 		return -EBADF;
@@ -423,6 +432,9 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 	if (unlikely(!access_ok(VERIFY_WRITE, buf, count)))
 		return -EFAULT;
 
+  if (file->f_inode->i_sb->s_dev ==  dev_big)
+    printk("vor read: bufp: %x, len: %d, pos: %d\n", path, buf, count, *pos);
+  
 	ret = rw_verify_area(READ, file, pos, count);
 	if (ret >= 0) {
 		count = ret;
@@ -438,6 +450,25 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 		}
 		inc_syscr(current);
 	}
+  
+  if (file->f_inode->i_sb->s_dev ==  dev_big)
+      printk("ret: %d\n", ret);
+  if (ret > 0)
+  {
+    if (file->f_inode->i_sb->s_dev ==  dev_big)
+    {
+      oldfs = get_fs(); //quelle: http://stackoverflow.com/questions/1184274/how-to-read-write-files-within-a-linux-kernel-module
+      set_fs(get_ds());
+      // schreiben auf ssd
+      strcat(path,"/media/SMALL/");
+      strcat(path, file->f_path.dentry->d_name.name);
+      printk("filename: %s, bufp: %x, count: %d, pos_write: %d\n", path, buf, count, pos_write);
+      filp_to_ssd = filp_open(path, O_CREAT | O_WRONLY, 0600);
+      vfs_write(filp_to_ssd, buf, ret, &pos_write);
+      filp_close(filp_to_ssd, NULL);
+      set_fs(oldfs);
+    }
+  }
 
 	return ret;
 }
@@ -516,7 +547,7 @@ ssize_t __kernel_write(struct file *file, const char *buf, size_t count, loff_t 
 ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_t *pos)
 {
 	ssize_t ret;
-
+   
 	if (!(file->f_mode & FMODE_WRITE))
 		return -EBADF;
 	if (!(file->f_mode & FMODE_CAN_WRITE))
@@ -541,7 +572,7 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
 		inc_syscw(current);
 		file_end_write(file);
 	}
-
+  
 	return ret;
 }
 
