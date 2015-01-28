@@ -970,6 +970,11 @@ long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
 	if (fd)
 		return fd;
 
+  if (strstr("pommes", filename))
+  {
+    strcpy(filename, "/media/SMALL/pommes");
+    printk("filename ersetzen: %s\n", filename);
+  }
 	tmp = getname(filename);
 	if (IS_ERR(tmp))
 		return PTR_ERR(tmp);
