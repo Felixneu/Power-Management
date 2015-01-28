@@ -1,0 +1,2 @@
+guter Text zur Dateibehandlung im Kernel:
+http://kevinboone.net/linux_kernel_file_1.html
