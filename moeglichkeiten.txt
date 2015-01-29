@@ -1,0 +1,24 @@
+Dateiebenen:
+
+- auf SSD-Cache flache Struktur mit Dateien (oder auch Struktur), Dateinamen aus original Pfad von BIG berechnen
+Notwendige Anpassungen:
+- beim open (do_sys_open):
+	- falls Datei auf SSD, Pfad von BIG auf SMALL ändern
+- beim read (vfs_read):
+	- falls Datei nicht auf SSD, zusätzlich zum normalen read auf SSD schreiben 
+	- falls Datei auf SSD, nichts tun (Pfad wurde ja in open schon angepasst)
+- beim write (?):
+	- falls Datei auf SSD, Datei regulär schreiben (auf SSD, da ja beim open schon geändert), zusätzlich auf HDD schreiben
+	- falls Datei Datei neu -> nicht auf SSD -> nicth in Verwaltugnsstruktur -> in open nicht umgebogen -> ganz normal schreiben
+
+offen Fragen:
+- beim write zusützlich auf HDD schreiben testen
+- wenn SSD voll, was passiert wenn neue Datei gecached werden soll 
+	- alte Dateien löschen, dazu muss Größe der neuen Datei bekannt sein (müsste im Inode stehen?)
+	- bei einfacher Zyklischer Liste, SSD vielleicht nicht gut gefüllt (viele große Dateien, dann kommt eine klein Neue rein ...)
+
+Blockebene (klingt für mich theoretisch immer noch einfacher und schöner):
+- Auf ganz unterster Ebene wo Blöcke gelesen und geschrieben werden
+- SSD wird raw beschrieben, eingeteilit in n Teile mit der Blockgröße
+- zur Verwaltung: eine Liste mit den Blöcken der HDD, die auf der SSD gecached sind
+
