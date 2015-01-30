@@ -12,10 +12,17 @@ Notwendige Anpassungen:
 	- falls Datei Datei neu -> nicht auf SSD -> nicth in Verwaltugnsstruktur -> in open nicht umgebogen -> ganz normal schreiben
 
 offen Fragen:
-- beim write zusützlich auf HDD schreiben testen
+- beim write zusützlich auf HDD schreiben testen -> funktioniert, allerdings wird die Datei auf HDD nicht neu angelegt -> falls sie vorher
+	größer war, steht nach dem schreiben noch der Rest von der alten Datei drin
 - wenn SSD voll, was passiert wenn neue Datei gecached werden soll 
 	- alte Dateien löschen, dazu muss Größe der neuen Datei bekannt sein (müsste im Inode stehen?)
 	- bei einfacher Zyklischer Liste, SSD vielleicht nicht gut gefüllt (viele große Dateien, dann kommt eine klein Neue rein ...)
+
+Problem: 
+1.  mache Programme (bash, vim, andere?) speichern sich wohl den Pfad den sie für open() verwenden, wenn dieser dann im Kernel umgebogen wird, stürtzen sie bei free() ab. -> Klingt logisch, ich schreibe einfach in den übergebenen Speicher in open() meinen neuen Dateinnamen, der könnte zu klein sein...
+	Lösungsidee: eigenen String allokieren für Dateinamen -> allerdings ist der dann im Kernelspace und normalerweise wird ein Userspace pointer erwartet
+		-> führt z.B. bei cat zu Bad Adress Fehler
+2. es wird alles mit Pfaden verwaltet -> werden die Mountpoints verändert, geht nichts mehr
 
 Blockebene (klingt für mich theoretisch immer noch einfacher und schöner):
 - Auf ganz unterster Ebene wo Blöcke gelesen und geschrieben werden

@@ -966,16 +966,33 @@ long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
 	struct open_flags op;
 	int fd = build_open_flags(flags, mode, &op);
 	struct filename *tmp;
+  char * myfilename;
 
 	if (fd)
 		return fd;
 
-  if (strstr("pommes", filename))
+  if (strstr(filename, "/media/BIG/pommespommes"))
   {
+    
+    /*myfilename = (char*)kmalloc(sizeof(char) * 100,GFP_USER);
+    printk("myfilename ptr: %x\n", myfilename);
+    if (0 != myfilename)
+      //strcpy(myfilename, "/media/SMALL/pommes");
+      copy_to_user (myfilename, "/media/SMALL/pommes" , 100);
+    */
     strcpy(filename, "/media/SMALL/pommes");
-    printk("filename ersetzen: %s\n", filename);
+    printk("filename orig name: %s\n", filename);
+    //printk("filename new : %s\n", myfilename);
+    tmp = getname(filename);
+    //tmp = getname("/media/SMALL/pommes");
   }
-	tmp = getname(filename);
+  else
+  {
+    tmp = getname(filename);
+  }
+  
+  
+  
 	if (IS_ERR(tmp))
 		return PTR_ERR(tmp);
 

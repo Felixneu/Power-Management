@@ -547,6 +547,13 @@ ssize_t __kernel_write(struct file *file, const char *buf, size_t count, loff_t 
 ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_t *pos)
 {
 	ssize_t ret;
+  
+    //eigene variablen:
+  struct file *filp_to_hdd;
+  char path[256]={0};
+  dev_t dev_small = 8388609;
+  mm_segment_t oldfs;
+  loff_t pos_write = file->f_pos;
    
 	if (!(file->f_mode & FMODE_WRITE))
 		return -EBADF;
@@ -572,6 +579,23 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
 		inc_syscw(current);
 		file_end_write(file);
 	}
+  
+  if (ret > 0)
+  {
+    if (file->f_inode->i_sb->s_dev ==  dev_small)
+    {
+      oldfs = get_fs(); //quelle: http://stackoverflow.com/questions/1184274/how-to-read-write-files-within-a-linux-kernel-module
+      set_fs(get_ds());
+      // schreiben auf hdd
+      strcat(path,"/media/BIG/pommespommes");
+      //strcat(path, file->f_path.dentry->d_name.name);
+      printk("filename: %s, bufp: %x, count: %d, pos_write: %d\n", path, buf, count, pos_write);
+      filp_to_hdd = filp_open(path, O_CREAT | O_WRONLY, 0600);
+      vfs_write(filp_to_hdd, buf, ret, &pos_write);
+      filp_close(filp_to_hdd, NULL);
+      set_fs(oldfs);
+    }
+  }
   
 	return ret;
 }
